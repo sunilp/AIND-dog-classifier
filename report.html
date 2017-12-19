@@ -13329,7 +13329,8 @@ SUVORK5CYII=
 <li>What percentage of the first 100 images in <code>dog_files</code> have a detected human face? </li>
 </ul>
 <p>Ideally, we would like 100% of human images with a detected face and 0% of dog images with a detected face.  You will see that our algorithm falls short of this goal, but still gives acceptable performance.  We extract the file paths for the first 100 images from each of the datasets and store them in the numpy arrays <code>human_files_short</code> and <code>dog_files_short</code>.</p>
-<p><strong>Answer:</strong></p>
+<p><strong>Answer:</strong> 
+It was 100% for the humans for first 100 images, but descreses slighly to 99% if changed to first 200 or 300 images. The dog images is showing 11% as human faces for first 100 images, which is quite not okay.</p>
 
 </div>
 </div>
@@ -13384,8 +13385,10 @@ Human faces detected in dog files 11
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Question 2:</strong> This algorithmic choice necessitates that we communicate to the user that we accept human images only when they provide a clear view of a face (otherwise, we risk having unneccessarily frustrated users!). In your opinion, is this a reasonable expectation to pose on the user? If not, can you think of a way to detect humans in images that does not necessitate an image with a clearly presented face?</p>
-<p><strong>Answer:</strong></p>
-<p>We suggest the face detector from OpenCV as a potential way to detect human images in your algorithm, but you are free to explore other approaches, especially approaches that make use of deep learning :).  Please use the code cell below to design and test your own face detection algorithm.  If you decide to pursue this <em>optional</em> task, report performance on each of the datasets.</p>
+<p><strong>Answer:</strong>
+It might not be the best way of detecting faces, as it not necessary to have only the front faces to be exposed as seen as human. the classic algoriths like <code>viola jones</code> tried to use the haar features on detecting faces (assuming there is change in brightenes along eyes, nose etc) which could be detected easily with simple haar patches. OpenCV implementation of finding faces is based in the haar cascades. it is good but limited on the pose of the face, surely cannot detect if person facing backward :). 
+More recent studies focus more on deep learning approach of detecting faces, and faster implementation. one of them is the deepFace. it usage the 3d allignment of the face and later learning the location of facial region and its corresponding rgb values.</p>
+<h5 id="(Optional)-Implementation">(Optional) Implementation<a class="anchor-link" href="#(Optional)-Implementation">&#182;</a></h5><p>We suggest the face detector from OpenCV as a potential way to detect human images in your algorithm, but you are free to explore other approaches, especially approaches that make use of deep learning :).  Please use the code cell below to design and test your own face detection algorithm.  If you decide to pursue this <em>optional</em> task, report performance on each of the datasets.</p>
 
 </div>
 </div>
@@ -13545,6 +13548,9 @@ $$</p>
 <li>What percentage of the images in <code>dog_files_short</code> have a detected dog?</li>
 </ul>
 <p><strong>Answer:</strong></p>
+<p>Now this VGG16 network worked like a charm, as it is already been trained on imagenet dataset for really long time :)</p>
+<p>So, percentage of dogs detected in human files for first 200 files, are 0 (as expected).
+and , Percentage of dog detected in groud tuth dog files are 100%.</p>
 
 </div>
 </div>
@@ -13708,6 +13714,11 @@ Dog detected in dog files 100
 <p><img src="images/sample_cnn.png" alt="Sample CNN"></p>
 <p><strong>Question 4:</strong> Outline the steps you took to get to your final CNN architecture and your reasoning at each step.  If you chose to use the hinted architecture above, describe why you think that CNN architecture should work well for the image classification task.</p>
 <p><strong>Answer:</strong></p>
+<p>I tried to make a bit larget network, yet keeping the trained parameter not exploding. 
+Added some stacked conv2d layers with relu activations followed by max pool layers.
+Later, i tried to remove the  dense layer, with 1x1 colvolutions, which performs similar, just shares the weight and have less parameters to train, so get trained faster.</p>
+<p>lastly, added the dense layer with 133 classes and softmax activation to have multiple categorical probabilities for the possible result.</p>
+<p>I used the adam as the optimizer, sometime, it works better than the rmsprop, but not always. :)</p>
 
 </div>
 </div>
@@ -14363,6 +14374,9 @@ test_{network} = bottleneck_features['test']</code></pre>
 </code></pre>
 <p><strong>Question 5:</strong> Outline the steps you took to get to your final CNN architecture and your reasoning at each step.  Describe why you think the architecture is suitable for the current problem.</p>
 <p><strong>Answer:</strong></p>
+<p>For this i tried to use the Xception Model, which works really good (<a href="https://arxiv.org/abs/1610.02357">https://arxiv.org/abs/1610.02357</a>) After reading the paper, came to know about it more. It would had been nice, if had imlemented it from scrach, (may be later in the course, will try).</p>
+<p>Yes, the architecture is okay for this task , as it has only 133 classes and respectivly more data. with only 20 epochs, its able to classify upto 85% of accuracy which is nice.</p>
+<p>I took the Xception model as is and added a global average pool layer to fatten the data followed by the dense layer with 133 units and softmax activation.</p>
 
 </div>
 </div>
